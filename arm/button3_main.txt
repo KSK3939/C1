@@ -1,0 +1,41 @@
+void ledRightShift(uint8_t num)
+{
+  for(uint8_t i = num; i > 0; i--)
+  {
+    HAL_GPIO_WritePin(led[i-1].port, led[i-1].number, led[i-1].onState);
+    HAL_Delay(100);
+  }
+  HAL_Delay(500);
+  for(uint8_t i = num; i > 0; i--)
+  {
+    HAL_GPIO_WritePin(led[i-1].port, led[i-1].number, led[i-1].offState);
+    HAL_Delay(100);
+  }
+  HAL_Delay(500);
+}
+// 오른쪽으로 하나씩 켜지고 하나씩 꺼지는 함수
+
+ while (1)
+  {
+    if(!(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_9))) // 평상시에 1. 버튼을 누르면 0이 되며 if문 활성화
+    {
+      ledLeftShift(8);
+    }
+    else if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8)))
+    {
+      ledRightShift(8);
+    }
+    else if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9)))
+    {
+      for(uint8_t i = 0; i < 8; i++)
+      {
+        ledToggle(i);
+      }
+    }
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}
+// 버튼 3개로 하나는 왼쪽, 하나는 오른쪽, 마지막은 전체 토글 버튼 구현

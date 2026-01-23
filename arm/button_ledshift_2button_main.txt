@@ -1,0 +1,138 @@
+int main(void)
+{
+  LED_CONTROL Led[8]=
+  {
+      {GPIOC, GPIO_PIN_8, GPIO_PIN_SET, GPIO_PIN_RESET},
+      {GPIOC, GPIO_PIN_6, GPIO_PIN_SET, GPIO_PIN_RESET},
+      {GPIOC, GPIO_PIN_5, GPIO_PIN_SET, GPIO_PIN_RESET},
+      {GPIOA, GPIO_PIN_12, GPIO_PIN_SET, GPIO_PIN_RESET},
+      {GPIOA, GPIO_PIN_11, GPIO_PIN_SET, GPIO_PIN_RESET},
+      {GPIOB, GPIO_PIN_12, GPIO_PIN_SET, GPIO_PIN_RESET},
+      {GPIOB, GPIO_PIN_2, GPIO_PIN_SET, GPIO_PIN_RESET},
+      {GPIOB, GPIO_PIN_1, GPIO_PIN_SET, GPIO_PIN_RESET},
+  }; // led.c에 있어서 그런지 안가져와져서 직접 가져옴
+
+  /* USER CODE BEGIN 1 */
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  /* USER CODE BEGIN 2 */
+
+  uint32_t lastDebounceTime = 0; // 마지막 디바운스 확인 시간
+  GPIO_PinState lastButtonState1 = GPIO_PIN_SET; // 마지막 버튼 상태
+  GPIO_PinState lastButtonState2 = GPIO_PIN_SET;
+  uint8_t i = 7; // 시작을 0에서부터 하기 위하여 i를 7로 설정
+  uint8_t flag = 0; // 우측동작을 위하여 flag 설정
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    GPIO_PinState currentButtonState1 = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_9);
+    GPIO_PinState currentButtonState2 = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8);
+
+    // 상태가 변했는지 확인
+    if(currentButtonState1 != lastButtonState1)
+    {
+      // 디바운스 시간까지 잠깐 대기
+      if(millis() - lastDebounceTime > DEBOUNCE_DELAY)
+      {
+        if(currentButtonState1 == GPIO_PIN_RESET)
+        {
+          // 버튼이 눌렸을때 사용할 코드 입력
+          i++; // 누르면 더함
+          if(i%8 == 0) // i가 8이 되면 0으로 변환
+          {
+            i = 0;
+            HAL_GPIO_WritePin(Led[i].port, Led[i].number, Led[i].onState); // 0번을 켜면서
+            HAL_GPIO_WritePin(Led[7].port, Led[7].number, Led[7].offState);  // 7번을 끔
+            if(flag == 0)
+            {
+              flag++;
+            }
+          }
+          else
+          {
+            HAL_GPIO_WritePin(Led[i].port, Led[i].number, Led[i].onState); // i를 켜면서
+            HAL_GPIO_WritePin(Led[i-1].port, Led[i-1].number, Led[i-1].offState); // 전번을 끔
+            if(flag == 0)
+            {
+              flag++;
+            }
+          }
+        }
+//        else
+//        {
+//          HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
+//        }
+        lastDebounceTime = millis();
+      }
+    }
+    if(currentButtonState2 != lastButtonState2)
+    {
+      // 디바운스 시간까지 잠깐 대기
+      if(millis() - lastDebounceTime > DEBOUNCE_DELAY)
+      {
+        if(currentButtonState2 == GPIO_PIN_RESET)
+        {
+          // 버튼이 눌렸을때 사용할 코드 입력
+          if(flag == 0) // 최초 동작 시 7번 led에서 시작하기 위하여 flag 설정
+          {
+            HAL_GPIO_WritePin(Led[i].port, Led[i].number, Led[i].onState);
+            flag++;
+          }
+          else if(i != 0)
+          {
+            i--; // 누르면 뺌
+            HAL_GPIO_WritePin(Led[i].port, Led[i].number, Led[i].onState); // i를 켜면서
+            HAL_GPIO_WritePin(Led[i+1].port, Led[i+1].number, Led[i+1].offState); // 전번을 끔
+            if(flag == 0)
+            {
+              flag++;
+            }
+          }
+          else // i가 0이 되면 7로 변환
+          {
+            i = 7;
+            HAL_GPIO_WritePin(Led[i].port, Led[i].number, Led[i].onState); // 7번을 켜면서
+            HAL_GPIO_WritePin(Led[0].port, Led[0].number, Led[0].offState);  // 0번을 끔
+            if(flag == 0)
+            {
+              flag++;
+            }
+          }
+        }
+//        else
+//        {
+//          HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
+//        }
+        lastDebounceTime = millis();
+      }
+    }
+    lastButtonState1 = currentButtonState1;
+    lastButtonState2 = currentButtonState2;
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}

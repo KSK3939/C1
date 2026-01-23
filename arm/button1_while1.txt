@@ -1,0 +1,16 @@
+  while (1)
+  {
+    if(!(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_9))) // 평상시에 1. 버튼을 누르면 0이 되며 if문 활성화
+    {
+      ledOn(8);
+    }
+    else
+    {
+      ledOff(8);
+    }
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}

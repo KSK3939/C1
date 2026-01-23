@@ -1,0 +1,27 @@
+  /* USER CODE BEGIN PFP */
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  HAL_UART_Receive_IT(&huart2, rxData, 4);
+}
+
+/* USER CODE END PFP */
+  
+  HAL_UART_Receive_IT(&huart2, rxData, 4); // 인터럽트. 뒤에 시간이 없음.
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    //HAL_UART_Receive(&huart2, rxData, 4, 1000); // huart2는 주소. usart.c에서 확인 가능. 데이터는 배열로 선언했기에 &안써도 됨.
+    // 사이즈는 4로 설정, timeout는 100ms
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_8);
+    HAL_Delay(200);
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}

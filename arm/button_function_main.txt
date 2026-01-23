@@ -1,0 +1,20 @@
+  while (1)
+  {
+   if(buttonGetPressed(0))
+   {
+     ledLeftShift(8);
+   }
+   if(buttonGetPressed(1))
+   {
+     ledRightShift(8);
+   }
+   if(buttonGetPressed(2))
+   {
+     ledCentertoSide(4);
+   }
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}
