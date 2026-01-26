@@ -1,0 +1,23 @@
+  while (1)
+  {
+    if(rxData[0] == 'a')
+    {
+      ledLeftShiftOne(&i);
+      rxData[0] = 0;
+    }
+    else if(rxData[0] == 'b')
+    {
+      ledRightShiftOne(&i);
+      rxData[0] = 0;
+    }
+    else if(rxData[0] == 'c')
+    {
+      ledOff(8);
+    }
+
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}
