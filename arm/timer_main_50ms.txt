@@ -1,0 +1,20 @@
+  /* USER CODE BEGIN 2 */
+
+  HAL_TIM_Base_Start(&htim11);
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 1);
+    delay_us(50000);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 0);
+    delay_us(50000);
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}
